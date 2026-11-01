@@ -1,0 +1,295 @@
+q4 finite-region canonical regeneration
+* Behavioral references/buffers are ideal; port energy is not full supply energy.
+.model WRITE SW(Ron=1000 Roff=1e18 Vt=0.5 Vh=0.05)
+.model SAMPLE SW(Ron=1 Roff=1e18 Vt=0.5 Vh=0.05)
+.model LATCH SW(Ron=10000 Roff=1e18 Vt=0.5 Vh=0.05)
+.options plotwinsize=0 numdgt=15 reltol=1e-8 abstol=1e-18 vntol=1e-11
+Vcm cm 0 .6
+Vpacket packet 0 1.2
+Cam3 am3 0 1e-13 IC=0
+Ram3 am3 0 1e18
+Cam2 am2 0 1e-13 IC=0
+Ram2 am2 0 1e18
+Cam1 am1 0 1e-13 IC=0
+Ram1 am1 0 1e18
+Cap0 ap0 0 1e-13 IC=0
+Rap0 ap0 0 1e18
+Cap1 ap1 0 1e-13 IC=0
+Rap1 ap1 0 1e18
+Cap2 ap2 0 1e-13 IC=0
+Rap2 ap2 0 1e18
+Cap3 ap3 0 1e-13 IC=0
+Rap3 ap3 0 1e18
+Vasample asample 0 PWL(0n 0 5n 0 5.01n 1 5.19n 1 5.2n 0 9n 0 9.01n 1 9.19n 1 9.2n 0 13n 0 13.01n 1 13.19n 1 13.2n 0 17n 0 17.01n 1 17.19n 1 17.2n 0 21n 0 21.01n 1 21.19n 1 21.2n 0 25n 0 25.01n 1 25.19n 1 25.2n 0 29n 0 29.01n 1 29.19n 1 29.2n 0 33n 0 33.01n 1 33.19n 1 33.2n 0 37n 0 37.01n 1 37.19n 1 37.2n 0 41n 0 41.01n 1 41.19n 1 41.2n 0 45n 0 45.01n 1 45.19n 1 45.2n 0 49n 0 49.01n 1 49.19n 1 49.2n 0 53n 0 53.01n 1 53.19n 1 53.2n 0 57n 0 57.01n 1 57.19n 1 57.2n 0 61n 0 61.01n 1 61.19n 1 61.2n 0 65n 0 65.01n 1 65.19n 1 65.2n 0 69n 0 69.01n 1 69.19n 1 69.2n 0 73n 0 73.01n 1 73.19n 1 73.2n 0 77n 0 77.01n 1 77.19n 1 77.2n 0 81n 0 81.01n 1 81.19n 1 81.2n 0 85n 0 85.01n 1 85.19n 1 85.2n 0 89n 0 89.01n 1 89.19n 1 89.2n 0 93n 0 93.01n 1 93.19n 1 93.2n 0 97n 0 97.01n 1 97.19n 1 97.2n 0 101n 0 101.01n 1 101.19n 1 101.2n 0 105n 0 105.01n 1 105.19n 1 105.2n 0 109n 0 109.01n 1 109.19n 1 109.2n 0 113n 0 113.01n 1 113.19n 1 113.2n 0 117n 0 117.01n 1 117.19n 1 117.2n 0 121n 0 121.01n 1 121.19n 1 121.2n 0 125n 0 125.01n 1 125.19n 1 125.2n 0 129n 0 129.01n 1 129.19n 1 129.2n 0)
+Vafire afire 0 PWL(0n 0 5.6n 0 5.61n 1 6.59n 1 6.6n 0 9.6n 0 9.61n 1 10.59n 1 10.6n 0 13.6n 0 13.61n 1 14.59n 1 14.6n 0 17.6n 0 17.61n 1 18.59n 1 18.6n 0 21.6n 0 21.61n 1 22.59n 1 22.6n 0 25.6n 0 25.61n 1 26.59n 1 26.6n 0 29.6n 0 29.61n 1 30.59n 1 30.6n 0 33.6n 0 33.61n 1 34.59n 1 34.6n 0 37.6n 0 37.61n 1 38.59n 1 38.6n 0 41.6n 0 41.61n 1 42.59n 1 42.6n 0 45.6n 0 45.61n 1 46.59n 1 46.6n 0 49.6n 0 49.61n 1 50.59n 1 50.6n 0 53.6n 0 53.61n 1 54.59n 1 54.6n 0 57.6n 0 57.61n 1 58.59n 1 58.6n 0 61.6n 0 61.61n 1 62.59n 1 62.6n 0 65.6n 0 65.61n 1 66.59n 1 66.6n 0 69.6n 0 69.61n 1 70.59n 1 70.6n 0 73.6n 0 73.61n 1 74.59n 1 74.6n 0 77.6n 0 77.61n 1 78.59n 1 78.6n 0 81.6n 0 81.61n 1 82.59n 1 82.6n 0 85.6n 0 85.61n 1 86.59n 1 86.6n 0 89.6n 0 89.61n 1 90.59n 1 90.6n 0 93.6n 0 93.61n 1 94.59n 1 94.6n 0 97.6n 0 97.61n 1 98.59n 1 98.6n 0 101.6n 0 101.61n 1 102.59n 1 102.6n 0 105.6n 0 105.61n 1 106.59n 1 106.6n 0 109.6n 0 109.61n 1 110.59n 1 110.6n 0 113.6n 0 113.61n 1 114.59n 1 114.6n 0 117.6n 0 117.61n 1 118.59n 1 118.6n 0 121.6n 0 121.61n 1 122.59n 1 122.6n 0 125.6n 0 125.61n 1 126.59n 1 126.6n 0 129.6n 0 129.61n 1 130.59n 1 130.6n 0)
+Bam2cmd am2cmd 0 V=if(V(am2)>0.029166666666667,1,if(V(am2)<-0.029166666666667,-1,0))
+Sam2h am2cmd am2h asample 0 SAMPLE
+Cam2h am2h 0 1f IC=0
+Ram2h am2h 0 1e18
+Bam2remove am2 0 I=3.3670033670034e-06*V(am2h)*V(afire)
+Bam2left 0 am3 I=8.4175084175084e-07*V(am2h)*V(afire)
+Bam2right 0 am1 I=8.4175084175084e-07*V(am2h)*V(afire)
+Bam1cmd am1cmd 0 V=if(V(am1)>0.029166666666667,1,if(V(am1)<-0.029166666666667,-1,0))
+Sam1h am1cmd am1h asample 0 SAMPLE
+Cam1h am1h 0 1f IC=0
+Ram1h am1h 0 1e18
+Bam1remove am1 0 I=3.3670033670034e-06*V(am1h)*V(afire)
+Bam1left 0 am2 I=8.4175084175084e-07*V(am1h)*V(afire)
+Bam1right 0 ap0 I=8.4175084175084e-07*V(am1h)*V(afire)
+Bap0cmd ap0cmd 0 V=if(V(ap0)>0.029166666666667,1,if(V(ap0)<-0.029166666666667,-1,0))
+Sap0h ap0cmd ap0h asample 0 SAMPLE
+Cap0h ap0h 0 1f IC=0
+Rap0h ap0h 0 1e18
+Bap0remove ap0 0 I=3.3670033670034e-06*V(ap0h)*V(afire)
+Bap0left 0 am1 I=8.4175084175084e-07*V(ap0h)*V(afire)
+Bap0right 0 ap1 I=8.4175084175084e-07*V(ap0h)*V(afire)
+Bap1cmd ap1cmd 0 V=if(V(ap1)>0.029166666666667,1,if(V(ap1)<-0.029166666666667,-1,0))
+Sap1h ap1cmd ap1h asample 0 SAMPLE
+Cap1h ap1h 0 1f IC=0
+Rap1h ap1h 0 1e18
+Bap1remove ap1 0 I=3.3670033670034e-06*V(ap1h)*V(afire)
+Bap1left 0 ap0 I=8.4175084175084e-07*V(ap1h)*V(afire)
+Bap1right 0 ap2 I=8.4175084175084e-07*V(ap1h)*V(afire)
+Bap2cmd ap2cmd 0 V=if(V(ap2)>0.029166666666667,1,if(V(ap2)<-0.029166666666667,-1,0))
+Sap2h ap2cmd ap2h asample 0 SAMPLE
+Cap2h ap2h 0 1f IC=0
+Rap2h ap2h 0 1e18
+Bap2remove ap2 0 I=3.3670033670034e-06*V(ap2h)*V(afire)
+Bap2left 0 ap1 I=8.4175084175084e-07*V(ap2h)*V(afire)
+Bap2right 0 ap3 I=8.4175084175084e-07*V(ap2h)*V(afire)
+Cbm3 bm3 0 1e-13 IC=0
+Rbm3 bm3 0 1e18
+Cbm2 bm2 0 1e-13 IC=0
+Rbm2 bm2 0 1e18
+Cbm1 bm1 0 1e-13 IC=0
+Rbm1 bm1 0 1e18
+Cbp0 bp0 0 1e-13 IC=0
+Rbp0 bp0 0 1e18
+Cbp1 bp1 0 1e-13 IC=0
+Rbp1 bp1 0 1e18
+Cbp2 bp2 0 1e-13 IC=0
+Rbp2 bp2 0 1e18
+Cbp3 bp3 0 1e-13 IC=0
+Rbp3 bp3 0 1e18
+Vbsample bsample 0 PWL(0n 0 150n 0 150.01n 1 150.19n 1 150.2n 0 154n 0 154.01n 1 154.19n 1 154.2n 0 158n 0 158.01n 1 158.19n 1 158.2n 0 162n 0 162.01n 1 162.19n 1 162.2n 0 166n 0 166.01n 1 166.19n 1 166.2n 0 170n 0 170.01n 1 170.19n 1 170.2n 0 174n 0 174.01n 1 174.19n 1 174.2n 0 178n 0 178.01n 1 178.19n 1 178.2n 0 182n 0 182.01n 1 182.19n 1 182.2n 0 186n 0 186.01n 1 186.19n 1 186.2n 0 190n 0 190.01n 1 190.19n 1 190.2n 0 194n 0 194.01n 1 194.19n 1 194.2n 0 198n 0 198.01n 1 198.19n 1 198.2n 0 202n 0 202.01n 1 202.19n 1 202.2n 0 206n 0 206.01n 1 206.19n 1 206.2n 0 210n 0 210.01n 1 210.19n 1 210.2n 0 214n 0 214.01n 1 214.19n 1 214.2n 0 218n 0 218.01n 1 218.19n 1 218.2n 0 222n 0 222.01n 1 222.19n 1 222.2n 0 226n 0 226.01n 1 226.19n 1 226.2n 0 230n 0 230.01n 1 230.19n 1 230.2n 0 234n 0 234.01n 1 234.19n 1 234.2n 0 238n 0 238.01n 1 238.19n 1 238.2n 0 242n 0 242.01n 1 242.19n 1 242.2n 0 246n 0 246.01n 1 246.19n 1 246.2n 0 250n 0 250.01n 1 250.19n 1 250.2n 0 254n 0 254.01n 1 254.19n 1 254.2n 0 258n 0 258.01n 1 258.19n 1 258.2n 0 262n 0 262.01n 1 262.19n 1 262.2n 0 266n 0 266.01n 1 266.19n 1 266.2n 0 270n 0 270.01n 1 270.19n 1 270.2n 0 274n 0 274.01n 1 274.19n 1 274.2n 0)
+Vbfire bfire 0 PWL(0n 0 150.6n 0 150.61n 1 151.59n 1 151.6n 0 154.6n 0 154.61n 1 155.59n 1 155.6n 0 158.6n 0 158.61n 1 159.59n 1 159.6n 0 162.6n 0 162.61n 1 163.59n 1 163.6n 0 166.6n 0 166.61n 1 167.59n 1 167.6n 0 170.6n 0 170.61n 1 171.59n 1 171.6n 0 174.6n 0 174.61n 1 175.59n 1 175.6n 0 178.6n 0 178.61n 1 179.59n 1 179.6n 0 182.6n 0 182.61n 1 183.59n 1 183.6n 0 186.6n 0 186.61n 1 187.59n 1 187.6n 0 190.6n 0 190.61n 1 191.59n 1 191.6n 0 194.6n 0 194.61n 1 195.59n 1 195.6n 0 198.6n 0 198.61n 1 199.59n 1 199.6n 0 202.6n 0 202.61n 1 203.59n 1 203.6n 0 206.6n 0 206.61n 1 207.59n 1 207.6n 0 210.6n 0 210.61n 1 211.59n 1 211.6n 0 214.6n 0 214.61n 1 215.59n 1 215.6n 0 218.6n 0 218.61n 1 219.59n 1 219.6n 0 222.6n 0 222.61n 1 223.59n 1 223.6n 0 226.6n 0 226.61n 1 227.59n 1 227.6n 0 230.6n 0 230.61n 1 231.59n 1 231.6n 0 234.6n 0 234.61n 1 235.59n 1 235.6n 0 238.6n 0 238.61n 1 239.59n 1 239.6n 0 242.6n 0 242.61n 1 243.59n 1 243.6n 0 246.6n 0 246.61n 1 247.59n 1 247.6n 0 250.6n 0 250.61n 1 251.59n 1 251.6n 0 254.6n 0 254.61n 1 255.59n 1 255.6n 0 258.6n 0 258.61n 1 259.59n 1 259.6n 0 262.6n 0 262.61n 1 263.59n 1 263.6n 0 266.6n 0 266.61n 1 267.59n 1 267.6n 0 270.6n 0 270.61n 1 271.59n 1 271.6n 0 274.6n 0 274.61n 1 275.59n 1 275.6n 0)
+Bbm2cmd bm2cmd 0 V=if(V(bm2)>0.029166666666667,1,if(V(bm2)<-0.029166666666667,-1,0))
+Sbm2h bm2cmd bm2h bsample 0 SAMPLE
+Cbm2h bm2h 0 1f IC=0
+Rbm2h bm2h 0 1e18
+Bbm2remove bm2 0 I=3.3670033670034e-06*V(bm2h)*V(bfire)
+Bbm2left 0 bm3 I=8.4175084175084e-07*V(bm2h)*V(bfire)
+Bbm2right 0 bm1 I=8.4175084175084e-07*V(bm2h)*V(bfire)
+Bbm1cmd bm1cmd 0 V=if(V(bm1)>0.029166666666667,1,if(V(bm1)<-0.029166666666667,-1,0))
+Sbm1h bm1cmd bm1h bsample 0 SAMPLE
+Cbm1h bm1h 0 1f IC=0
+Rbm1h bm1h 0 1e18
+Bbm1remove bm1 0 I=3.3670033670034e-06*V(bm1h)*V(bfire)
+Bbm1left 0 bm2 I=8.4175084175084e-07*V(bm1h)*V(bfire)
+Bbm1right 0 bp0 I=8.4175084175084e-07*V(bm1h)*V(bfire)
+Bbp0cmd bp0cmd 0 V=if(V(bp0)>0.029166666666667,1,if(V(bp0)<-0.029166666666667,-1,0))
+Sbp0h bp0cmd bp0h bsample 0 SAMPLE
+Cbp0h bp0h 0 1f IC=0
+Rbp0h bp0h 0 1e18
+Bbp0remove bp0 0 I=3.3670033670034e-06*V(bp0h)*V(bfire)
+Bbp0left 0 bm1 I=8.4175084175084e-07*V(bp0h)*V(bfire)
+Bbp0right 0 bp1 I=8.4175084175084e-07*V(bp0h)*V(bfire)
+Bbp1cmd bp1cmd 0 V=if(V(bp1)>0.029166666666667,1,if(V(bp1)<-0.029166666666667,-1,0))
+Sbp1h bp1cmd bp1h bsample 0 SAMPLE
+Cbp1h bp1h 0 1f IC=0
+Rbp1h bp1h 0 1e18
+Bbp1remove bp1 0 I=3.3670033670034e-06*V(bp1h)*V(bfire)
+Bbp1left 0 bp0 I=8.4175084175084e-07*V(bp1h)*V(bfire)
+Bbp1right 0 bp2 I=8.4175084175084e-07*V(bp1h)*V(bfire)
+Bbp2cmd bp2cmd 0 V=if(V(bp2)>0.029166666666667,1,if(V(bp2)<-0.029166666666667,-1,0))
+Sbp2h bp2cmd bp2h bsample 0 SAMPLE
+Cbp2h bp2h 0 1f IC=0
+Rbp2h bp2h 0 1e18
+Bbp2remove bp2 0 I=3.3670033670034e-06*V(bp2h)*V(bfire)
+Bbp2left 0 bp1 I=8.4175084175084e-07*V(bp2h)*V(bfire)
+Bbp2right 0 bp3 I=8.4175084175084e-07*V(bp2h)*V(bfire)
+VA inputa 0 0.025
+VB inputb 0 0.05
+VBias inputbias 0 0.025
+Vmac1 mac1 0 PWL(0n 0 1n 0 1.01n 1 1.99n 1 2n 0)
+Bmac1 0 ap0 I=3.3670033670034e-05*(2*V(inputa)+V(inputb))*V(mac1)
+Istage1residual 0 ap0 PWL(0n 0 3n 0 3.01n 1.5350877192982e-06 3.19n 1.5350877192982e-06 3.2n 0)
+Vr0s r0s 0 PWL(0n 0 135n 0 135.01n 1 135.19n 1 135.2n 0)
+Vr0r r0r 0 PWL(0n 0 135.5n 0 135.51n 1 135.99n 1 136n 0)
+Vr0w r0w 0 PWL(0n 0 136.2n 0 136.21n 1 138.19n 1 138.2n 0)
+Br0code r0code 0 V=-3+if(((V(am3))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(am3))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(am3))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(am3))/0.0083333333333333+(0))>0.5,1,0)+if(((V(am3))/0.0083333333333333+(0))>1.5,1,0)+if(((V(am3))/0.0083333333333333+(0))>2.5,1,0)
+Br0bad r0bad 0 V=if(((V(am3))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(am3))/0.0083333333333333+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Sr0code r0code r0h r0s 0 LATCH
+Cr0h r0h 0 1f IC=0
+Rr0h r0h 0 1e18
+Sr0bad r0bad r0bh r0s 0 LATCH
+Cr0bh r0bh 0 1f IC=0
+Rr0bh r0bh 0 1e18
+Cr0o0 r0o0 0 5e-14 IC=0.6
+Rr0o0 r0o0 cm 2e+16
+Sr0reset0 r0o0 cm r0r 0 WRITE
+Br0reference0 r0reference0 0 V=if(V(r0w)>.1,if(abs(V(r0h)-(3))<.25,0.6375,if(abs(V(r0h)-(2))<.25,0.625,if(abs(V(r0h)-(1))<.25,0.6125,if(abs(V(r0h)-(0))<.25,0.6,if(abs(V(r0h)-(-1))<.25,0.5875,if(abs(V(r0h)-(-2))<.25,0.575,if(abs(V(r0h)-(-3))<.25,0.5625,.6))))))),.6)
+Br0valid0 r0valid0 0 V=if(V(r0bh)<.5,V(r0w),0)
+Sr0reference0 r0reference0 r0o0 r0valid0 0 WRITE
+Cr0o1 r0o1 0 5e-14 IC=0.6
+Rr0o1 r0o1 cm 2e+16
+Sr0reset1 r0o1 cm r0r 0 WRITE
+Br0reference1 r0reference1 0 V=if(V(r0w)>.1,if(abs(V(r0h)-(3))<.25,0.5625,if(abs(V(r0h)-(2))<.25,0.575,if(abs(V(r0h)-(1))<.25,0.5875,if(abs(V(r0h)-(0))<.25,0.6,if(abs(V(r0h)-(-1))<.25,0.6125,if(abs(V(r0h)-(-2))<.25,0.625,if(abs(V(r0h)-(-3))<.25,0.6375,.6))))))),.6)
+Br0valid1 r0valid1 0 V=if(V(r0bh)<.5,V(r0w),0)
+Sr0reference1 r0reference1 r0o1 r0valid1 0 WRITE
+Br0buffer r0out 0 V=V(r0o0,r0o1)
+Vr1s r1s 0 PWL(0n 0 135n 0 135.01n 1 135.19n 1 135.2n 0)
+Vr1r r1r 0 PWL(0n 0 135.5n 0 135.51n 1 135.99n 1 136n 0)
+Vr1w r1w 0 PWL(0n 0 136.2n 0 136.21n 1 138.19n 1 138.2n 0)
+Br1code r1code 0 V=-3+if(((V(am2))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(am2))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(am2))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(am2))/0.0083333333333333+(0))>0.5,1,0)+if(((V(am2))/0.0083333333333333+(0))>1.5,1,0)+if(((V(am2))/0.0083333333333333+(0))>2.5,1,0)
+Br1bad r1bad 0 V=if(((V(am2))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(am2))/0.0083333333333333+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Sr1code r1code r1h r1s 0 LATCH
+Cr1h r1h 0 1f IC=0
+Rr1h r1h 0 1e18
+Sr1bad r1bad r1bh r1s 0 LATCH
+Cr1bh r1bh 0 1f IC=0
+Rr1bh r1bh 0 1e18
+Cr1o0 r1o0 0 5e-14 IC=0.6
+Rr1o0 r1o0 cm 2e+16
+Sr1reset0 r1o0 cm r1r 0 WRITE
+Br1reference0 r1reference0 0 V=if(V(r1w)>.1,if(abs(V(r1h)-(3))<.25,0.6375,if(abs(V(r1h)-(2))<.25,0.625,if(abs(V(r1h)-(1))<.25,0.6125,if(abs(V(r1h)-(0))<.25,0.6,if(abs(V(r1h)-(-1))<.25,0.5875,if(abs(V(r1h)-(-2))<.25,0.575,if(abs(V(r1h)-(-3))<.25,0.5625,.6))))))),.6)
+Br1valid0 r1valid0 0 V=if(V(r1bh)<.5,V(r1w),0)
+Sr1reference0 r1reference0 r1o0 r1valid0 0 WRITE
+Cr1o1 r1o1 0 5e-14 IC=0.6
+Rr1o1 r1o1 cm 2e+16
+Sr1reset1 r1o1 cm r1r 0 WRITE
+Br1reference1 r1reference1 0 V=if(V(r1w)>.1,if(abs(V(r1h)-(3))<.25,0.5625,if(abs(V(r1h)-(2))<.25,0.575,if(abs(V(r1h)-(1))<.25,0.5875,if(abs(V(r1h)-(0))<.25,0.6,if(abs(V(r1h)-(-1))<.25,0.6125,if(abs(V(r1h)-(-2))<.25,0.625,if(abs(V(r1h)-(-3))<.25,0.6375,.6))))))),.6)
+Br1valid1 r1valid1 0 V=if(V(r1bh)<.5,V(r1w),0)
+Sr1reference1 r1reference1 r1o1 r1valid1 0 WRITE
+Br1buffer r1out 0 V=V(r1o0,r1o1)
+Vr2s r2s 0 PWL(0n 0 135n 0 135.01n 1 135.19n 1 135.2n 0)
+Vr2r r2r 0 PWL(0n 0 135.5n 0 135.51n 1 135.99n 1 136n 0)
+Vr2w r2w 0 PWL(0n 0 136.2n 0 136.21n 1 138.19n 1 138.2n 0)
+Br2code r2code 0 V=-3+if(((V(am1))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(am1))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(am1))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(am1))/0.0083333333333333+(0))>0.5,1,0)+if(((V(am1))/0.0083333333333333+(0))>1.5,1,0)+if(((V(am1))/0.0083333333333333+(0))>2.5,1,0)
+Br2bad r2bad 0 V=if(((V(am1))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(am1))/0.0083333333333333+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Sr2code r2code r2h r2s 0 LATCH
+Cr2h r2h 0 1f IC=0
+Rr2h r2h 0 1e18
+Sr2bad r2bad r2bh r2s 0 LATCH
+Cr2bh r2bh 0 1f IC=0
+Rr2bh r2bh 0 1e18
+Cr2o0 r2o0 0 5e-14 IC=0.6
+Rr2o0 r2o0 cm 2e+16
+Sr2reset0 r2o0 cm r2r 0 WRITE
+Br2reference0 r2reference0 0 V=if(V(r2w)>.1,if(abs(V(r2h)-(3))<.25,0.6375,if(abs(V(r2h)-(2))<.25,0.625,if(abs(V(r2h)-(1))<.25,0.6125,if(abs(V(r2h)-(0))<.25,0.6,if(abs(V(r2h)-(-1))<.25,0.5875,if(abs(V(r2h)-(-2))<.25,0.575,if(abs(V(r2h)-(-3))<.25,0.5625,.6))))))),.6)
+Br2valid0 r2valid0 0 V=if(V(r2bh)<.5,V(r2w),0)
+Sr2reference0 r2reference0 r2o0 r2valid0 0 WRITE
+Cr2o1 r2o1 0 5e-14 IC=0.6
+Rr2o1 r2o1 cm 2e+16
+Sr2reset1 r2o1 cm r2r 0 WRITE
+Br2reference1 r2reference1 0 V=if(V(r2w)>.1,if(abs(V(r2h)-(3))<.25,0.5625,if(abs(V(r2h)-(2))<.25,0.575,if(abs(V(r2h)-(1))<.25,0.5875,if(abs(V(r2h)-(0))<.25,0.6,if(abs(V(r2h)-(-1))<.25,0.6125,if(abs(V(r2h)-(-2))<.25,0.625,if(abs(V(r2h)-(-3))<.25,0.6375,.6))))))),.6)
+Br2valid1 r2valid1 0 V=if(V(r2bh)<.5,V(r2w),0)
+Sr2reference1 r2reference1 r2o1 r2valid1 0 WRITE
+Br2buffer r2out 0 V=V(r2o0,r2o1)
+Vr3s r3s 0 PWL(0n 0 135n 0 135.01n 1 135.19n 1 135.2n 0)
+Vr3r r3r 0 PWL(0n 0 135.5n 0 135.51n 1 135.99n 1 136n 0)
+Vr3w r3w 0 PWL(0n 0 136.2n 0 136.21n 1 138.19n 1 138.2n 0)
+Br3code r3code 0 V=-3+if(((V(ap0))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(ap0))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(ap0))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(ap0))/0.0083333333333333+(0))>0.5,1,0)+if(((V(ap0))/0.0083333333333333+(0))>1.5,1,0)+if(((V(ap0))/0.0083333333333333+(0))>2.5,1,0)
+Br3bad r3bad 0 V=if(((V(ap0))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(ap0))/0.0083333333333333+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Sr3code r3code r3h r3s 0 LATCH
+Cr3h r3h 0 1f IC=0
+Rr3h r3h 0 1e18
+Sr3bad r3bad r3bh r3s 0 LATCH
+Cr3bh r3bh 0 1f IC=0
+Rr3bh r3bh 0 1e18
+Cr3o0 r3o0 0 5e-14 IC=0.6
+Rr3o0 r3o0 cm 2e+16
+Sr3reset0 r3o0 cm r3r 0 WRITE
+Br3reference0 r3reference0 0 V=if(V(r3w)>.1,if(abs(V(r3h)-(3))<.25,0.6375,if(abs(V(r3h)-(2))<.25,0.625,if(abs(V(r3h)-(1))<.25,0.6125,if(abs(V(r3h)-(0))<.25,0.6,if(abs(V(r3h)-(-1))<.25,0.5875,if(abs(V(r3h)-(-2))<.25,0.575,if(abs(V(r3h)-(-3))<.25,0.5625,.6))))))),.6)
+Br3valid0 r3valid0 0 V=if(V(r3bh)<.5,V(r3w),0)
+Sr3reference0 r3reference0 r3o0 r3valid0 0 WRITE
+Cr3o1 r3o1 0 5e-14 IC=0.6
+Rr3o1 r3o1 cm 2e+16
+Sr3reset1 r3o1 cm r3r 0 WRITE
+Br3reference1 r3reference1 0 V=if(V(r3w)>.1,if(abs(V(r3h)-(3))<.25,0.5625,if(abs(V(r3h)-(2))<.25,0.575,if(abs(V(r3h)-(1))<.25,0.5875,if(abs(V(r3h)-(0))<.25,0.6,if(abs(V(r3h)-(-1))<.25,0.6125,if(abs(V(r3h)-(-2))<.25,0.625,if(abs(V(r3h)-(-3))<.25,0.6375,.6))))))),.6)
+Br3valid1 r3valid1 0 V=if(V(r3bh)<.5,V(r3w),0)
+Sr3reference1 r3reference1 r3o1 r3valid1 0 WRITE
+Br3buffer r3out 0 V=V(r3o0,r3o1)
+Vr4s r4s 0 PWL(0n 0 135n 0 135.01n 1 135.19n 1 135.2n 0)
+Vr4r r4r 0 PWL(0n 0 135.5n 0 135.51n 1 135.99n 1 136n 0)
+Vr4w r4w 0 PWL(0n 0 136.2n 0 136.21n 1 138.19n 1 138.2n 0)
+Br4code r4code 0 V=-3+if(((V(ap1))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(ap1))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(ap1))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(ap1))/0.0083333333333333+(0))>0.5,1,0)+if(((V(ap1))/0.0083333333333333+(0))>1.5,1,0)+if(((V(ap1))/0.0083333333333333+(0))>2.5,1,0)
+Br4bad r4bad 0 V=if(((V(ap1))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(ap1))/0.0083333333333333+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Sr4code r4code r4h r4s 0 LATCH
+Cr4h r4h 0 1f IC=0
+Rr4h r4h 0 1e18
+Sr4bad r4bad r4bh r4s 0 LATCH
+Cr4bh r4bh 0 1f IC=0
+Rr4bh r4bh 0 1e18
+Cr4o0 r4o0 0 5e-14 IC=0.6
+Rr4o0 r4o0 cm 2e+16
+Sr4reset0 r4o0 cm r4r 0 WRITE
+Br4reference0 r4reference0 0 V=if(V(r4w)>.1,if(abs(V(r4h)-(3))<.25,0.6375,if(abs(V(r4h)-(2))<.25,0.625,if(abs(V(r4h)-(1))<.25,0.6125,if(abs(V(r4h)-(0))<.25,0.6,if(abs(V(r4h)-(-1))<.25,0.5875,if(abs(V(r4h)-(-2))<.25,0.575,if(abs(V(r4h)-(-3))<.25,0.5625,.6))))))),.6)
+Br4valid0 r4valid0 0 V=if(V(r4bh)<.5,V(r4w),0)
+Sr4reference0 r4reference0 r4o0 r4valid0 0 WRITE
+Cr4o1 r4o1 0 5e-14 IC=0.6
+Rr4o1 r4o1 cm 2e+16
+Sr4reset1 r4o1 cm r4r 0 WRITE
+Br4reference1 r4reference1 0 V=if(V(r4w)>.1,if(abs(V(r4h)-(3))<.25,0.5625,if(abs(V(r4h)-(2))<.25,0.575,if(abs(V(r4h)-(1))<.25,0.5875,if(abs(V(r4h)-(0))<.25,0.6,if(abs(V(r4h)-(-1))<.25,0.6125,if(abs(V(r4h)-(-2))<.25,0.625,if(abs(V(r4h)-(-3))<.25,0.6375,.6))))))),.6)
+Br4valid1 r4valid1 0 V=if(V(r4bh)<.5,V(r4w),0)
+Sr4reference1 r4reference1 r4o1 r4valid1 0 WRITE
+Br4buffer r4out 0 V=V(r4o0,r4o1)
+Vr5s r5s 0 PWL(0n 0 135n 0 135.01n 1 135.19n 1 135.2n 0)
+Vr5r r5r 0 PWL(0n 0 135.5n 0 135.51n 1 135.99n 1 136n 0)
+Vr5w r5w 0 PWL(0n 0 136.2n 0 136.21n 1 138.19n 1 138.2n 0)
+Br5code r5code 0 V=-3+if(((V(ap2))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(ap2))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(ap2))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(ap2))/0.0083333333333333+(0))>0.5,1,0)+if(((V(ap2))/0.0083333333333333+(0))>1.5,1,0)+if(((V(ap2))/0.0083333333333333+(0))>2.5,1,0)
+Br5bad r5bad 0 V=if(((V(ap2))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(ap2))/0.0083333333333333+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Sr5code r5code r5h r5s 0 LATCH
+Cr5h r5h 0 1f IC=0
+Rr5h r5h 0 1e18
+Sr5bad r5bad r5bh r5s 0 LATCH
+Cr5bh r5bh 0 1f IC=0
+Rr5bh r5bh 0 1e18
+Cr5o0 r5o0 0 5e-14 IC=0.6
+Rr5o0 r5o0 cm 2e+16
+Sr5reset0 r5o0 cm r5r 0 WRITE
+Br5reference0 r5reference0 0 V=if(V(r5w)>.1,if(abs(V(r5h)-(3))<.25,0.6375,if(abs(V(r5h)-(2))<.25,0.625,if(abs(V(r5h)-(1))<.25,0.6125,if(abs(V(r5h)-(0))<.25,0.6,if(abs(V(r5h)-(-1))<.25,0.5875,if(abs(V(r5h)-(-2))<.25,0.575,if(abs(V(r5h)-(-3))<.25,0.5625,.6))))))),.6)
+Br5valid0 r5valid0 0 V=if(V(r5bh)<.5,V(r5w),0)
+Sr5reference0 r5reference0 r5o0 r5valid0 0 WRITE
+Cr5o1 r5o1 0 5e-14 IC=0.6
+Rr5o1 r5o1 cm 2e+16
+Sr5reset1 r5o1 cm r5r 0 WRITE
+Br5reference1 r5reference1 0 V=if(V(r5w)>.1,if(abs(V(r5h)-(3))<.25,0.5625,if(abs(V(r5h)-(2))<.25,0.575,if(abs(V(r5h)-(1))<.25,0.5875,if(abs(V(r5h)-(0))<.25,0.6,if(abs(V(r5h)-(-1))<.25,0.6125,if(abs(V(r5h)-(-2))<.25,0.625,if(abs(V(r5h)-(-3))<.25,0.6375,.6))))))),.6)
+Br5valid1 r5valid1 0 V=if(V(r5bh)<.5,V(r5w),0)
+Sr5reference1 r5reference1 r5o1 r5valid1 0 WRITE
+Br5buffer r5out 0 V=V(r5o0,r5o1)
+Vr6s r6s 0 PWL(0n 0 135n 0 135.01n 1 135.19n 1 135.2n 0)
+Vr6r r6r 0 PWL(0n 0 135.5n 0 135.51n 1 135.99n 1 136n 0)
+Vr6w r6w 0 PWL(0n 0 136.2n 0 136.21n 1 138.19n 1 138.2n 0)
+Br6code r6code 0 V=-3+if(((V(ap3))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(ap3))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(ap3))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(ap3))/0.0083333333333333+(0))>0.5,1,0)+if(((V(ap3))/0.0083333333333333+(0))>1.5,1,0)+if(((V(ap3))/0.0083333333333333+(0))>2.5,1,0)
+Br6bad r6bad 0 V=if(((V(ap3))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(ap3))/0.0083333333333333+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Sr6code r6code r6h r6s 0 LATCH
+Cr6h r6h 0 1f IC=0
+Rr6h r6h 0 1e18
+Sr6bad r6bad r6bh r6s 0 LATCH
+Cr6bh r6bh 0 1f IC=0
+Rr6bh r6bh 0 1e18
+Cr6o0 r6o0 0 5e-14 IC=0.6
+Rr6o0 r6o0 cm 2e+16
+Sr6reset0 r6o0 cm r6r 0 WRITE
+Br6reference0 r6reference0 0 V=if(V(r6w)>.1,if(abs(V(r6h)-(3))<.25,0.6375,if(abs(V(r6h)-(2))<.25,0.625,if(abs(V(r6h)-(1))<.25,0.6125,if(abs(V(r6h)-(0))<.25,0.6,if(abs(V(r6h)-(-1))<.25,0.5875,if(abs(V(r6h)-(-2))<.25,0.575,if(abs(V(r6h)-(-3))<.25,0.5625,.6))))))),.6)
+Br6valid0 r6valid0 0 V=if(V(r6bh)<.5,V(r6w),0)
+Sr6reference0 r6reference0 r6o0 r6valid0 0 WRITE
+Cr6o1 r6o1 0 5e-14 IC=0.6
+Rr6o1 r6o1 cm 2e+16
+Sr6reset1 r6o1 cm r6r 0 WRITE
+Br6reference1 r6reference1 0 V=if(V(r6w)>.1,if(abs(V(r6h)-(3))<.25,0.5625,if(abs(V(r6h)-(2))<.25,0.575,if(abs(V(r6h)-(1))<.25,0.5875,if(abs(V(r6h)-(0))<.25,0.6,if(abs(V(r6h)-(-1))<.25,0.6125,if(abs(V(r6h)-(-2))<.25,0.625,if(abs(V(r6h)-(-3))<.25,0.6375,.6))))))),.6)
+Br6valid1 r6valid1 0 V=if(V(r6bh)<.5,V(r6w),0)
+Sr6reference1 r6reference1 r6o1 r6valid1 0 WRITE
+Br6buffer r6out 0 V=V(r6o0,r6o1)
+Vmac2 mac2 0 PWL(0n 0 143n 0 143.01n 1 143.99n 1 144n 0)
+Bmac20 0 bm3 I=3.3670033670034e-05*(2*V(r0out)+(0))*V(mac2)
+Bmac21 0 bm2 I=3.3670033670034e-05*(2*V(r1out)+(0))*V(mac2)
+Bmac22 0 bm1 I=3.3670033670034e-05*(2*V(r2out)+(0))*V(mac2)
+Bmac23 0 bp0 I=3.3670033670034e-05*(2*V(r3out)+(-V(inputbias)))*V(mac2)
+Bmac24 0 bp1 I=3.3670033670034e-05*(2*V(r4out)+(0))*V(mac2)
+Bmac25 0 bp2 I=3.3670033670034e-05*(2*V(r5out)+(0))*V(mac2)
+Bmac26 0 bp3 I=3.3670033670034e-05*(2*V(r6out)+(0))*V(mac2)
+.save i(br0reference0) i(br0reference1) i(br1reference0) i(br1reference1) i(br2reference0) i(br2reference1) i(br3reference0) i(br3reference1) i(br4reference0) i(br4reference1) i(br5reference0) i(br5reference1) i(br6reference0) i(br6reference1) i(vcm) v(am1) v(am2) v(am3) v(ap0) v(ap1) v(ap2) v(ap3) v(bm1) v(bm2) v(bm3) v(bp0) v(bp1) v(bp2) v(bp3) v(cm) v(r0bh) v(r0h) v(r0o0) v(r0o1) v(r0out) v(r0reference0) v(r0reference1) v(r1bh) v(r1h) v(r1o0) v(r1o1) v(r1out) v(r1reference0) v(r1reference1) v(r2bh) v(r2h) v(r2o0) v(r2o1) v(r2out) v(r2reference0) v(r2reference1) v(r3bh) v(r3h) v(r3o0) v(r3o1) v(r3out) v(r3reference0) v(r3reference1) v(r4bh) v(r4h) v(r4o0) v(r4o1) v(r4out) v(r4reference0) v(r4reference1) v(r5bh) v(r5h) v(r5o0) v(r5o1) v(r5out) v(r5reference0) v(r5reference1) v(r6bh) v(r6h) v(r6o0) v(r6o1) v(r6out) v(r6reference0) v(r6reference1)
+.tran 0 280n 0 0.04n UIC
+.end

@@ -1,0 +1,20 @@
+q4 finite-region canonical regeneration
+* Behavioral references/buffers are ideal; port energy is not full supply energy.
+.model WRITE SW(Ron=1000 Roff=1e18 Vt=0.5 Vh=0.05)
+.model SAMPLE SW(Ron=1 Roff=1e18 Vt=0.5 Vh=0.05)
+.model LATCH SW(Ron=10000 Roff=1e18 Vt=0.5 Vh=0.05)
+.options plotwinsize=0 numdgt=15 reltol=1e-8 abstol=1e-18 vntol=1e-11
+Vcm cm 0 .6
+Vpacket packet 0 1.2
+Vshift shift 0 PWL(0n 0 1n 0 1.01n 1 2.99n 1 3n 0)
+Vhigh high 0 0.025
+Vlow low 0 0.025
+Ckept kept 0 1e-13 IC=0
+Rkept kept 0 1e18
+Skept high kept shift 0 WRITE
+Cdiscard discard 0 1e-13 IC=0
+Rdiscard discard 0 1e18
+Sdiscard low discard shift 0 WRITE
+.save i(vcm) v(cm) v(discard) v(kept)
+.tran 0 4.2n 0 0.04n UIC
+.end

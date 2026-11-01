@@ -1,0 +1,17 @@
+Gamma q=3 signed three-active-node cell demo, passive boundary receivers
+.include gamma_unit_cell.sub
+.param Q=3 SCALE=4 CSTATE=100f VUNIT=0.1 SIGN=1
+XLEFT sm1 bl s0 clk gate GAMMA_UNIT Q={Q} CSTATE={CSTATE} VUNIT={VUNIT} SCALE={SCALE}
+XCENTER s0 sm1 sp1 clk gate GAMMA_UNIT Q={Q} CSTATE={CSTATE} VUNIT={VUNIT} SCALE={SCALE}
+XRIGHT sp1 s0 br clk gate GAMMA_UNIT Q={Q} CSTATE={CSTATE} VUNIT={VUNIT} SCALE={SCALE}
+CBL bl 0 {CSTATE} IC=0
+CBR br 0 {CSTATE} IC=0
+RBL bl 0 1e18
+RBR br 0 1e18
+IIN 0 s0 PULSE(0 {SIGN*Q*CSTATE*VUNIT/SCALE/490p} 5n 10p 10p 480p 1u)
+VCLK clk 0 PULSE(0 1 7n 10p 10p 180p 4n)
+VGATE gate 0 PULSE(0 1 7.6n 10p 10p 980p 4n)
+.save V(sm1) V(s0) V(sp1) V(bl) V(br)
+.options plotwinsize=0 numdgt=15 reltol=1e-6 abstol=1e-15 vntol=1e-9
+.tran 0 30n 0 50p UIC
+.end

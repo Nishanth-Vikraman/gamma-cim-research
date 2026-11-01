@@ -1,0 +1,460 @@
+q4 finite-region canonical regeneration
+* Behavioral references/buffers are ideal; port energy is not full supply energy.
+.model WRITE SW(Ron=1000 Roff=1e18 Vt=0.5 Vh=0.05)
+.model SAMPLE SW(Ron=1 Roff=1e18 Vt=0.5 Vh=0.05)
+.model LATCH SW(Ron=10000 Roff=1e18 Vt=0.5 Vh=0.05)
+.options plotwinsize=0 numdgt=15 reltol=1e-8 abstol=1e-18 vntol=1e-11
+Vcm cm 0 .6
+Vpacket packet 0 1.2
+Vinput input 0 0.025
+Cs0raw s0raw 0 1e-13 IC=0
+Rs0raw s0raw 0 1e+16
+Vs0mac s0mac 0 PWL(0n 0 1n 0 1.01n 1 1.79n 1 1.8n 0)
+Bs0learned 0 s0raw I=4.2194092827004e-05*(2*V(input)+(-1)*V(input))*V(s0mac)
+Vs0s s0s 0 PWL(0n 0 2.3n 0 2.31n 1 2.49n 1 2.5n 0)
+Vs0r s0r 0 PWL(0n 0 2.8n 0 2.81n 1 3.29n 1 3.3n 0)
+Vs0w s0w 0 PWL(0n 0 3.5n 0 3.51n 1 5.49n 1 5.5n 0)
+Bs0code s0code 0 V=-3+if(((V(s0raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s0raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s0raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s0raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s0raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s0raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs0bad s0bad 0 V=if(((V(s0raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s0raw))/0.0083333333333333+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Ss0code s0code s0h s0s 0 LATCH
+Cs0h s0h 0 1f IC=0
+Rs0h s0h 0 1e18
+Ss0bad s0bad s0bh s0s 0 LATCH
+Cs0bh s0bh 0 1f IC=0
+Rs0bh s0bh 0 1e18
+Cs0o0 s0o0 0 5e-14 IC=0.6
+Rs0o0 s0o0 cm 2e+16
+Ss0reset0 s0o0 cm s0r 0 WRITE
+Bs0reference0 s0reference0 0 V=if(V(s0w)>.1,if(abs(V(s0h)-(3))<.25,0.6375,if(abs(V(s0h)-(2))<.25,0.625,if(abs(V(s0h)-(1))<.25,0.6125,if(abs(V(s0h)-(0))<.25,0.6,if(abs(V(s0h)-(-1))<.25,0.5875,if(abs(V(s0h)-(-2))<.25,0.575,if(abs(V(s0h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs0valid0 s0valid0 0 V=if(V(s0bh)<.5,V(s0w),0)
+Ss0reference0 s0reference0 s0o0 s0valid0 0 WRITE
+Cs0o1 s0o1 0 5e-14 IC=0.6
+Rs0o1 s0o1 cm 2e+16
+Ss0reset1 s0o1 cm s0r 0 WRITE
+Bs0reference1 s0reference1 0 V=if(V(s0w)>.1,if(abs(V(s0h)-(3))<.25,0.5625,if(abs(V(s0h)-(2))<.25,0.575,if(abs(V(s0h)-(1))<.25,0.5875,if(abs(V(s0h)-(0))<.25,0.6,if(abs(V(s0h)-(-1))<.25,0.6125,if(abs(V(s0h)-(-2))<.25,0.625,if(abs(V(s0h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs0valid1 s0valid1 0 V=if(V(s0bh)<.5,V(s0w),0)
+Ss0reference1 s0reference1 s0o1 s0valid1 0 WRITE
+Bs0buffer s0out 0 V=V(s0o0,s0o1)
+Cs1raw s1raw 0 1e-13 IC=0
+Rs1raw s1raw 0 1e+16
+Vs1mac s1mac 0 PWL(0n 0 9n 0 9.01n 1 9.79n 1 9.8n 0)
+Bs1learned 0 s1raw I=4.2194092827004e-05*(2*V(s0out)+(-1)*V(input))*V(s1mac)
+Vs1s s1s 0 PWL(0n 0 10.3n 0 10.31n 1 10.49n 1 10.5n 0)
+Vs1r s1r 0 PWL(0n 0 10.8n 0 10.81n 1 11.29n 1 11.3n 0)
+Vs1w s1w 0 PWL(0n 0 11.5n 0 11.51n 1 13.49n 1 13.5n 0)
+Bs1code s1code 0 V=-3+if(((V(s1raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s1raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s1raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s1raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s1raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s1raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs1bad s1bad 0 V=if(((V(s1raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s1raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s0bh))>.5,1,0)))
+Ss1code s1code s1h s1s 0 LATCH
+Cs1h s1h 0 1f IC=0
+Rs1h s1h 0 1e18
+Ss1bad s1bad s1bh s1s 0 LATCH
+Cs1bh s1bh 0 1f IC=0
+Rs1bh s1bh 0 1e18
+Cs1o0 s1o0 0 5e-14 IC=0.6
+Rs1o0 s1o0 cm 2e+16
+Ss1reset0 s1o0 cm s1r 0 WRITE
+Bs1reference0 s1reference0 0 V=if(V(s1w)>.1,if(abs(V(s1h)-(3))<.25,0.6375,if(abs(V(s1h)-(2))<.25,0.625,if(abs(V(s1h)-(1))<.25,0.6125,if(abs(V(s1h)-(0))<.25,0.6,if(abs(V(s1h)-(-1))<.25,0.5875,if(abs(V(s1h)-(-2))<.25,0.575,if(abs(V(s1h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs1valid0 s1valid0 0 V=if(V(s1bh)<.5,V(s1w),0)
+Ss1reference0 s1reference0 s1o0 s1valid0 0 WRITE
+Cs1o1 s1o1 0 5e-14 IC=0.6
+Rs1o1 s1o1 cm 2e+16
+Ss1reset1 s1o1 cm s1r 0 WRITE
+Bs1reference1 s1reference1 0 V=if(V(s1w)>.1,if(abs(V(s1h)-(3))<.25,0.5625,if(abs(V(s1h)-(2))<.25,0.575,if(abs(V(s1h)-(1))<.25,0.5875,if(abs(V(s1h)-(0))<.25,0.6,if(abs(V(s1h)-(-1))<.25,0.6125,if(abs(V(s1h)-(-2))<.25,0.625,if(abs(V(s1h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs1valid1 s1valid1 0 V=if(V(s1bh)<.5,V(s1w),0)
+Ss1reference1 s1reference1 s1o1 s1valid1 0 WRITE
+Bs1buffer s1out 0 V=V(s1o0,s1o1)
+Cs2raw s2raw 0 1e-13 IC=0
+Rs2raw s2raw 0 1e+16
+Vs2mac s2mac 0 PWL(0n 0 17n 0 17.01n 1 17.79n 1 17.8n 0)
+Bs2learned 0 s2raw I=4.2194092827004e-05*(2*V(s1out)+(-1)*V(input))*V(s2mac)
+Vs2s s2s 0 PWL(0n 0 18.3n 0 18.31n 1 18.49n 1 18.5n 0)
+Vs2r s2r 0 PWL(0n 0 18.8n 0 18.81n 1 19.29n 1 19.3n 0)
+Vs2w s2w 0 PWL(0n 0 19.5n 0 19.51n 1 21.49n 1 21.5n 0)
+Bs2code s2code 0 V=-3+if(((V(s2raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s2raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s2raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s2raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s2raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s2raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs2bad s2bad 0 V=if(((V(s2raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s2raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s1bh))>.5,1,0)))
+Ss2code s2code s2h s2s 0 LATCH
+Cs2h s2h 0 1f IC=0
+Rs2h s2h 0 1e18
+Ss2bad s2bad s2bh s2s 0 LATCH
+Cs2bh s2bh 0 1f IC=0
+Rs2bh s2bh 0 1e18
+Cs2o0 s2o0 0 5e-14 IC=0.6
+Rs2o0 s2o0 cm 2e+16
+Ss2reset0 s2o0 cm s2r 0 WRITE
+Bs2reference0 s2reference0 0 V=if(V(s2w)>.1,if(abs(V(s2h)-(3))<.25,0.6375,if(abs(V(s2h)-(2))<.25,0.625,if(abs(V(s2h)-(1))<.25,0.6125,if(abs(V(s2h)-(0))<.25,0.6,if(abs(V(s2h)-(-1))<.25,0.5875,if(abs(V(s2h)-(-2))<.25,0.575,if(abs(V(s2h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs2valid0 s2valid0 0 V=if(V(s2bh)<.5,V(s2w),0)
+Ss2reference0 s2reference0 s2o0 s2valid0 0 WRITE
+Cs2o1 s2o1 0 5e-14 IC=0.6
+Rs2o1 s2o1 cm 2e+16
+Ss2reset1 s2o1 cm s2r 0 WRITE
+Bs2reference1 s2reference1 0 V=if(V(s2w)>.1,if(abs(V(s2h)-(3))<.25,0.5625,if(abs(V(s2h)-(2))<.25,0.575,if(abs(V(s2h)-(1))<.25,0.5875,if(abs(V(s2h)-(0))<.25,0.6,if(abs(V(s2h)-(-1))<.25,0.6125,if(abs(V(s2h)-(-2))<.25,0.625,if(abs(V(s2h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs2valid1 s2valid1 0 V=if(V(s2bh)<.5,V(s2w),0)
+Ss2reference1 s2reference1 s2o1 s2valid1 0 WRITE
+Bs2buffer s2out 0 V=V(s2o0,s2o1)
+Cs3raw s3raw 0 1e-13 IC=0
+Rs3raw s3raw 0 1e+16
+Vs3mac s3mac 0 PWL(0n 0 25n 0 25.01n 1 25.79n 1 25.8n 0)
+Bs3learned 0 s3raw I=4.2194092827004e-05*(2*V(s2out)+(-1)*V(input))*V(s3mac)
+Vs3s s3s 0 PWL(0n 0 26.3n 0 26.31n 1 26.49n 1 26.5n 0)
+Vs3r s3r 0 PWL(0n 0 26.8n 0 26.81n 1 27.29n 1 27.3n 0)
+Vs3w s3w 0 PWL(0n 0 27.5n 0 27.51n 1 29.49n 1 29.5n 0)
+Bs3code s3code 0 V=-3+if(((V(s3raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s3raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s3raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s3raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s3raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s3raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs3bad s3bad 0 V=if(((V(s3raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s3raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s2bh))>.5,1,0)))
+Ss3code s3code s3h s3s 0 LATCH
+Cs3h s3h 0 1f IC=0
+Rs3h s3h 0 1e18
+Ss3bad s3bad s3bh s3s 0 LATCH
+Cs3bh s3bh 0 1f IC=0
+Rs3bh s3bh 0 1e18
+Cs3o0 s3o0 0 5e-14 IC=0.6
+Rs3o0 s3o0 cm 2e+16
+Ss3reset0 s3o0 cm s3r 0 WRITE
+Bs3reference0 s3reference0 0 V=if(V(s3w)>.1,if(abs(V(s3h)-(3))<.25,0.6375,if(abs(V(s3h)-(2))<.25,0.625,if(abs(V(s3h)-(1))<.25,0.6125,if(abs(V(s3h)-(0))<.25,0.6,if(abs(V(s3h)-(-1))<.25,0.5875,if(abs(V(s3h)-(-2))<.25,0.575,if(abs(V(s3h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs3valid0 s3valid0 0 V=if(V(s3bh)<.5,V(s3w),0)
+Ss3reference0 s3reference0 s3o0 s3valid0 0 WRITE
+Cs3o1 s3o1 0 5e-14 IC=0.6
+Rs3o1 s3o1 cm 2e+16
+Ss3reset1 s3o1 cm s3r 0 WRITE
+Bs3reference1 s3reference1 0 V=if(V(s3w)>.1,if(abs(V(s3h)-(3))<.25,0.5625,if(abs(V(s3h)-(2))<.25,0.575,if(abs(V(s3h)-(1))<.25,0.5875,if(abs(V(s3h)-(0))<.25,0.6,if(abs(V(s3h)-(-1))<.25,0.6125,if(abs(V(s3h)-(-2))<.25,0.625,if(abs(V(s3h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs3valid1 s3valid1 0 V=if(V(s3bh)<.5,V(s3w),0)
+Ss3reference1 s3reference1 s3o1 s3valid1 0 WRITE
+Bs3buffer s3out 0 V=V(s3o0,s3o1)
+Cs4raw s4raw 0 1e-13 IC=0
+Rs4raw s4raw 0 1e+16
+Vs4mac s4mac 0 PWL(0n 0 33n 0 33.01n 1 33.79n 1 33.8n 0)
+Bs4learned 0 s4raw I=4.2194092827004e-05*(2*V(s3out)+(-1)*V(input))*V(s4mac)
+Vs4s s4s 0 PWL(0n 0 34.3n 0 34.31n 1 34.49n 1 34.5n 0)
+Vs4r s4r 0 PWL(0n 0 34.8n 0 34.81n 1 35.29n 1 35.3n 0)
+Vs4w s4w 0 PWL(0n 0 35.5n 0 35.51n 1 37.49n 1 37.5n 0)
+Bs4code s4code 0 V=-3+if(((V(s4raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s4raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s4raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s4raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s4raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s4raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs4bad s4bad 0 V=if(((V(s4raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s4raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s3bh))>.5,1,0)))
+Ss4code s4code s4h s4s 0 LATCH
+Cs4h s4h 0 1f IC=0
+Rs4h s4h 0 1e18
+Ss4bad s4bad s4bh s4s 0 LATCH
+Cs4bh s4bh 0 1f IC=0
+Rs4bh s4bh 0 1e18
+Cs4o0 s4o0 0 5e-14 IC=0.6
+Rs4o0 s4o0 cm 2e+16
+Ss4reset0 s4o0 cm s4r 0 WRITE
+Bs4reference0 s4reference0 0 V=if(V(s4w)>.1,if(abs(V(s4h)-(3))<.25,0.6375,if(abs(V(s4h)-(2))<.25,0.625,if(abs(V(s4h)-(1))<.25,0.6125,if(abs(V(s4h)-(0))<.25,0.6,if(abs(V(s4h)-(-1))<.25,0.5875,if(abs(V(s4h)-(-2))<.25,0.575,if(abs(V(s4h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs4valid0 s4valid0 0 V=if(V(s4bh)<.5,V(s4w),0)
+Ss4reference0 s4reference0 s4o0 s4valid0 0 WRITE
+Cs4o1 s4o1 0 5e-14 IC=0.6
+Rs4o1 s4o1 cm 2e+16
+Ss4reset1 s4o1 cm s4r 0 WRITE
+Bs4reference1 s4reference1 0 V=if(V(s4w)>.1,if(abs(V(s4h)-(3))<.25,0.5625,if(abs(V(s4h)-(2))<.25,0.575,if(abs(V(s4h)-(1))<.25,0.5875,if(abs(V(s4h)-(0))<.25,0.6,if(abs(V(s4h)-(-1))<.25,0.6125,if(abs(V(s4h)-(-2))<.25,0.625,if(abs(V(s4h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs4valid1 s4valid1 0 V=if(V(s4bh)<.5,V(s4w),0)
+Ss4reference1 s4reference1 s4o1 s4valid1 0 WRITE
+Bs4buffer s4out 0 V=V(s4o0,s4o1)
+Cs5raw s5raw 0 1e-13 IC=0
+Rs5raw s5raw 0 1e+16
+Vs5mac s5mac 0 PWL(0n 0 41n 0 41.01n 1 41.79n 1 41.8n 0)
+Bs5learned 0 s5raw I=4.2194092827004e-05*(2*V(s4out)+(-1)*V(input))*V(s5mac)
+Vs5s s5s 0 PWL(0n 0 42.3n 0 42.31n 1 42.49n 1 42.5n 0)
+Vs5r s5r 0 PWL(0n 0 42.8n 0 42.81n 1 43.29n 1 43.3n 0)
+Vs5w s5w 0 PWL(0n 0 43.5n 0 43.51n 1 45.49n 1 45.5n 0)
+Bs5code s5code 0 V=-3+if(((V(s5raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s5raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s5raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s5raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s5raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s5raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs5bad s5bad 0 V=if(((V(s5raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s5raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s4bh))>.5,1,0)))
+Ss5code s5code s5h s5s 0 LATCH
+Cs5h s5h 0 1f IC=0
+Rs5h s5h 0 1e18
+Ss5bad s5bad s5bh s5s 0 LATCH
+Cs5bh s5bh 0 1f IC=0
+Rs5bh s5bh 0 1e18
+Cs5o0 s5o0 0 5e-14 IC=0.6
+Rs5o0 s5o0 cm 2e+16
+Ss5reset0 s5o0 cm s5r 0 WRITE
+Bs5reference0 s5reference0 0 V=if(V(s5w)>.1,if(abs(V(s5h)-(3))<.25,0.6375,if(abs(V(s5h)-(2))<.25,0.625,if(abs(V(s5h)-(1))<.25,0.6125,if(abs(V(s5h)-(0))<.25,0.6,if(abs(V(s5h)-(-1))<.25,0.5875,if(abs(V(s5h)-(-2))<.25,0.575,if(abs(V(s5h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs5valid0 s5valid0 0 V=if(V(s5bh)<.5,V(s5w),0)
+Ss5reference0 s5reference0 s5o0 s5valid0 0 WRITE
+Cs5o1 s5o1 0 5e-14 IC=0.6
+Rs5o1 s5o1 cm 2e+16
+Ss5reset1 s5o1 cm s5r 0 WRITE
+Bs5reference1 s5reference1 0 V=if(V(s5w)>.1,if(abs(V(s5h)-(3))<.25,0.5625,if(abs(V(s5h)-(2))<.25,0.575,if(abs(V(s5h)-(1))<.25,0.5875,if(abs(V(s5h)-(0))<.25,0.6,if(abs(V(s5h)-(-1))<.25,0.6125,if(abs(V(s5h)-(-2))<.25,0.625,if(abs(V(s5h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs5valid1 s5valid1 0 V=if(V(s5bh)<.5,V(s5w),0)
+Ss5reference1 s5reference1 s5o1 s5valid1 0 WRITE
+Bs5buffer s5out 0 V=V(s5o0,s5o1)
+Cs6raw s6raw 0 1e-13 IC=0
+Rs6raw s6raw 0 1e+16
+Vs6mac s6mac 0 PWL(0n 0 49n 0 49.01n 1 49.79n 1 49.8n 0)
+Bs6learned 0 s6raw I=4.2194092827004e-05*(2*V(s5out)+(-1)*V(input))*V(s6mac)
+Vs6s s6s 0 PWL(0n 0 50.3n 0 50.31n 1 50.49n 1 50.5n 0)
+Vs6r s6r 0 PWL(0n 0 50.8n 0 50.81n 1 51.29n 1 51.3n 0)
+Vs6w s6w 0 PWL(0n 0 51.5n 0 51.51n 1 53.49n 1 53.5n 0)
+Bs6code s6code 0 V=-3+if(((V(s6raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s6raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s6raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s6raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s6raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s6raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs6bad s6bad 0 V=if(((V(s6raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s6raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s5bh))>.5,1,0)))
+Ss6code s6code s6h s6s 0 LATCH
+Cs6h s6h 0 1f IC=0
+Rs6h s6h 0 1e18
+Ss6bad s6bad s6bh s6s 0 LATCH
+Cs6bh s6bh 0 1f IC=0
+Rs6bh s6bh 0 1e18
+Cs6o0 s6o0 0 5e-14 IC=0.6
+Rs6o0 s6o0 cm 2e+16
+Ss6reset0 s6o0 cm s6r 0 WRITE
+Bs6reference0 s6reference0 0 V=if(V(s6w)>.1,if(abs(V(s6h)-(3))<.25,0.6375,if(abs(V(s6h)-(2))<.25,0.625,if(abs(V(s6h)-(1))<.25,0.6125,if(abs(V(s6h)-(0))<.25,0.6,if(abs(V(s6h)-(-1))<.25,0.5875,if(abs(V(s6h)-(-2))<.25,0.575,if(abs(V(s6h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs6valid0 s6valid0 0 V=if(V(s6bh)<.5,V(s6w),0)
+Ss6reference0 s6reference0 s6o0 s6valid0 0 WRITE
+Cs6o1 s6o1 0 5e-14 IC=0.6
+Rs6o1 s6o1 cm 2e+16
+Ss6reset1 s6o1 cm s6r 0 WRITE
+Bs6reference1 s6reference1 0 V=if(V(s6w)>.1,if(abs(V(s6h)-(3))<.25,0.5625,if(abs(V(s6h)-(2))<.25,0.575,if(abs(V(s6h)-(1))<.25,0.5875,if(abs(V(s6h)-(0))<.25,0.6,if(abs(V(s6h)-(-1))<.25,0.6125,if(abs(V(s6h)-(-2))<.25,0.625,if(abs(V(s6h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs6valid1 s6valid1 0 V=if(V(s6bh)<.5,V(s6w),0)
+Ss6reference1 s6reference1 s6o1 s6valid1 0 WRITE
+Bs6buffer s6out 0 V=V(s6o0,s6o1)
+Cs7raw s7raw 0 1e-13 IC=0
+Rs7raw s7raw 0 1e+16
+Vs7mac s7mac 0 PWL(0n 0 57n 0 57.01n 1 57.79n 1 57.8n 0)
+Bs7learned 0 s7raw I=4.2194092827004e-05*(2*V(s6out)+(-1)*V(input))*V(s7mac)
+Vs7s s7s 0 PWL(0n 0 58.3n 0 58.31n 1 58.49n 1 58.5n 0)
+Vs7r s7r 0 PWL(0n 0 58.8n 0 58.81n 1 59.29n 1 59.3n 0)
+Vs7w s7w 0 PWL(0n 0 59.5n 0 59.51n 1 61.49n 1 61.5n 0)
+Bs7code s7code 0 V=-3+if(((V(s7raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s7raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s7raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s7raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s7raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s7raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs7bad s7bad 0 V=if(((V(s7raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s7raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s6bh))>.5,1,0)))
+Ss7code s7code s7h s7s 0 LATCH
+Cs7h s7h 0 1f IC=0
+Rs7h s7h 0 1e18
+Ss7bad s7bad s7bh s7s 0 LATCH
+Cs7bh s7bh 0 1f IC=0
+Rs7bh s7bh 0 1e18
+Cs7o0 s7o0 0 5e-14 IC=0.6
+Rs7o0 s7o0 cm 2e+16
+Ss7reset0 s7o0 cm s7r 0 WRITE
+Bs7reference0 s7reference0 0 V=if(V(s7w)>.1,if(abs(V(s7h)-(3))<.25,0.6375,if(abs(V(s7h)-(2))<.25,0.625,if(abs(V(s7h)-(1))<.25,0.6125,if(abs(V(s7h)-(0))<.25,0.6,if(abs(V(s7h)-(-1))<.25,0.5875,if(abs(V(s7h)-(-2))<.25,0.575,if(abs(V(s7h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs7valid0 s7valid0 0 V=if(V(s7bh)<.5,V(s7w),0)
+Ss7reference0 s7reference0 s7o0 s7valid0 0 WRITE
+Cs7o1 s7o1 0 5e-14 IC=0.6
+Rs7o1 s7o1 cm 2e+16
+Ss7reset1 s7o1 cm s7r 0 WRITE
+Bs7reference1 s7reference1 0 V=if(V(s7w)>.1,if(abs(V(s7h)-(3))<.25,0.5625,if(abs(V(s7h)-(2))<.25,0.575,if(abs(V(s7h)-(1))<.25,0.5875,if(abs(V(s7h)-(0))<.25,0.6,if(abs(V(s7h)-(-1))<.25,0.6125,if(abs(V(s7h)-(-2))<.25,0.625,if(abs(V(s7h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs7valid1 s7valid1 0 V=if(V(s7bh)<.5,V(s7w),0)
+Ss7reference1 s7reference1 s7o1 s7valid1 0 WRITE
+Bs7buffer s7out 0 V=V(s7o0,s7o1)
+Cs8raw s8raw 0 1e-13 IC=0
+Rs8raw s8raw 0 1e+16
+Vs8mac s8mac 0 PWL(0n 0 65n 0 65.01n 1 65.79n 1 65.8n 0)
+Bs8learned 0 s8raw I=4.2194092827004e-05*(2*V(s7out)+(-1)*V(input))*V(s8mac)
+Vs8s s8s 0 PWL(0n 0 66.3n 0 66.31n 1 66.49n 1 66.5n 0)
+Vs8r s8r 0 PWL(0n 0 66.8n 0 66.81n 1 67.29n 1 67.3n 0)
+Vs8w s8w 0 PWL(0n 0 67.5n 0 67.51n 1 69.49n 1 69.5n 0)
+Bs8code s8code 0 V=-3+if(((V(s8raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s8raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s8raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s8raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s8raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s8raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs8bad s8bad 0 V=if(((V(s8raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s8raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s7bh))>.5,1,0)))
+Ss8code s8code s8h s8s 0 LATCH
+Cs8h s8h 0 1f IC=0
+Rs8h s8h 0 1e18
+Ss8bad s8bad s8bh s8s 0 LATCH
+Cs8bh s8bh 0 1f IC=0
+Rs8bh s8bh 0 1e18
+Cs8o0 s8o0 0 5e-14 IC=0.6
+Rs8o0 s8o0 cm 2e+16
+Ss8reset0 s8o0 cm s8r 0 WRITE
+Bs8reference0 s8reference0 0 V=if(V(s8w)>.1,if(abs(V(s8h)-(3))<.25,0.6375,if(abs(V(s8h)-(2))<.25,0.625,if(abs(V(s8h)-(1))<.25,0.6125,if(abs(V(s8h)-(0))<.25,0.6,if(abs(V(s8h)-(-1))<.25,0.5875,if(abs(V(s8h)-(-2))<.25,0.575,if(abs(V(s8h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs8valid0 s8valid0 0 V=if(V(s8bh)<.5,V(s8w),0)
+Ss8reference0 s8reference0 s8o0 s8valid0 0 WRITE
+Cs8o1 s8o1 0 5e-14 IC=0.6
+Rs8o1 s8o1 cm 2e+16
+Ss8reset1 s8o1 cm s8r 0 WRITE
+Bs8reference1 s8reference1 0 V=if(V(s8w)>.1,if(abs(V(s8h)-(3))<.25,0.5625,if(abs(V(s8h)-(2))<.25,0.575,if(abs(V(s8h)-(1))<.25,0.5875,if(abs(V(s8h)-(0))<.25,0.6,if(abs(V(s8h)-(-1))<.25,0.6125,if(abs(V(s8h)-(-2))<.25,0.625,if(abs(V(s8h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs8valid1 s8valid1 0 V=if(V(s8bh)<.5,V(s8w),0)
+Ss8reference1 s8reference1 s8o1 s8valid1 0 WRITE
+Bs8buffer s8out 0 V=V(s8o0,s8o1)
+Cs9raw s9raw 0 1e-13 IC=0
+Rs9raw s9raw 0 1e+16
+Vs9mac s9mac 0 PWL(0n 0 73n 0 73.01n 1 73.79n 1 73.8n 0)
+Bs9learned 0 s9raw I=4.2194092827004e-05*(2*V(s8out)+(-1)*V(input))*V(s9mac)
+Vs9s s9s 0 PWL(0n 0 74.3n 0 74.31n 1 74.49n 1 74.5n 0)
+Vs9r s9r 0 PWL(0n 0 74.8n 0 74.81n 1 75.29n 1 75.3n 0)
+Vs9w s9w 0 PWL(0n 0 75.5n 0 75.51n 1 77.49n 1 77.5n 0)
+Bs9code s9code 0 V=-3+if(((V(s9raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s9raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s9raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s9raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s9raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s9raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs9bad s9bad 0 V=if(((V(s9raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s9raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s8bh))>.5,1,0)))
+Ss9code s9code s9h s9s 0 LATCH
+Cs9h s9h 0 1f IC=0
+Rs9h s9h 0 1e18
+Ss9bad s9bad s9bh s9s 0 LATCH
+Cs9bh s9bh 0 1f IC=0
+Rs9bh s9bh 0 1e18
+Cs9o0 s9o0 0 5e-14 IC=0.6
+Rs9o0 s9o0 cm 2e+16
+Ss9reset0 s9o0 cm s9r 0 WRITE
+Bs9reference0 s9reference0 0 V=if(V(s9w)>.1,if(abs(V(s9h)-(3))<.25,0.6375,if(abs(V(s9h)-(2))<.25,0.625,if(abs(V(s9h)-(1))<.25,0.6125,if(abs(V(s9h)-(0))<.25,0.6,if(abs(V(s9h)-(-1))<.25,0.5875,if(abs(V(s9h)-(-2))<.25,0.575,if(abs(V(s9h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs9valid0 s9valid0 0 V=if(V(s9bh)<.5,V(s9w),0)
+Ss9reference0 s9reference0 s9o0 s9valid0 0 WRITE
+Cs9o1 s9o1 0 5e-14 IC=0.6
+Rs9o1 s9o1 cm 2e+16
+Ss9reset1 s9o1 cm s9r 0 WRITE
+Bs9reference1 s9reference1 0 V=if(V(s9w)>.1,if(abs(V(s9h)-(3))<.25,0.5625,if(abs(V(s9h)-(2))<.25,0.575,if(abs(V(s9h)-(1))<.25,0.5875,if(abs(V(s9h)-(0))<.25,0.6,if(abs(V(s9h)-(-1))<.25,0.6125,if(abs(V(s9h)-(-2))<.25,0.625,if(abs(V(s9h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs9valid1 s9valid1 0 V=if(V(s9bh)<.5,V(s9w),0)
+Ss9reference1 s9reference1 s9o1 s9valid1 0 WRITE
+Bs9buffer s9out 0 V=V(s9o0,s9o1)
+Cs10raw s10raw 0 1e-13 IC=0
+Rs10raw s10raw 0 1e+16
+Vs10mac s10mac 0 PWL(0n 0 81n 0 81.01n 1 81.79n 1 81.8n 0)
+Bs10learned 0 s10raw I=4.2194092827004e-05*(2*V(s9out)+(-1)*V(input))*V(s10mac)
+Vs10s s10s 0 PWL(0n 0 82.3n 0 82.31n 1 82.49n 1 82.5n 0)
+Vs10r s10r 0 PWL(0n 0 82.8n 0 82.81n 1 83.29n 1 83.3n 0)
+Vs10w s10w 0 PWL(0n 0 83.5n 0 83.51n 1 85.49n 1 85.5n 0)
+Bs10code s10code 0 V=-3+if(((V(s10raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s10raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s10raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s10raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s10raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s10raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs10bad s10bad 0 V=if(((V(s10raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s10raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s9bh))>.5,1,0)))
+Ss10code s10code s10h s10s 0 LATCH
+Cs10h s10h 0 1f IC=0
+Rs10h s10h 0 1e18
+Ss10bad s10bad s10bh s10s 0 LATCH
+Cs10bh s10bh 0 1f IC=0
+Rs10bh s10bh 0 1e18
+Cs10o0 s10o0 0 5e-14 IC=0.6
+Rs10o0 s10o0 cm 2e+16
+Ss10reset0 s10o0 cm s10r 0 WRITE
+Bs10reference0 s10reference0 0 V=if(V(s10w)>.1,if(abs(V(s10h)-(3))<.25,0.6375,if(abs(V(s10h)-(2))<.25,0.625,if(abs(V(s10h)-(1))<.25,0.6125,if(abs(V(s10h)-(0))<.25,0.6,if(abs(V(s10h)-(-1))<.25,0.5875,if(abs(V(s10h)-(-2))<.25,0.575,if(abs(V(s10h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs10valid0 s10valid0 0 V=if(V(s10bh)<.5,V(s10w),0)
+Ss10reference0 s10reference0 s10o0 s10valid0 0 WRITE
+Cs10o1 s10o1 0 5e-14 IC=0.6
+Rs10o1 s10o1 cm 2e+16
+Ss10reset1 s10o1 cm s10r 0 WRITE
+Bs10reference1 s10reference1 0 V=if(V(s10w)>.1,if(abs(V(s10h)-(3))<.25,0.5625,if(abs(V(s10h)-(2))<.25,0.575,if(abs(V(s10h)-(1))<.25,0.5875,if(abs(V(s10h)-(0))<.25,0.6,if(abs(V(s10h)-(-1))<.25,0.6125,if(abs(V(s10h)-(-2))<.25,0.625,if(abs(V(s10h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs10valid1 s10valid1 0 V=if(V(s10bh)<.5,V(s10w),0)
+Ss10reference1 s10reference1 s10o1 s10valid1 0 WRITE
+Bs10buffer s10out 0 V=V(s10o0,s10o1)
+Cs11raw s11raw 0 1e-13 IC=0
+Rs11raw s11raw 0 1e+16
+Vs11mac s11mac 0 PWL(0n 0 89n 0 89.01n 1 89.79n 1 89.8n 0)
+Bs11learned 0 s11raw I=4.2194092827004e-05*(2*V(s10out)+(-1)*V(input))*V(s11mac)
+Vs11s s11s 0 PWL(0n 0 90.3n 0 90.31n 1 90.49n 1 90.5n 0)
+Vs11r s11r 0 PWL(0n 0 90.8n 0 90.81n 1 91.29n 1 91.3n 0)
+Vs11w s11w 0 PWL(0n 0 91.5n 0 91.51n 1 93.49n 1 93.5n 0)
+Bs11code s11code 0 V=-3+if(((V(s11raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s11raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s11raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s11raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s11raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s11raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs11bad s11bad 0 V=if(((V(s11raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s11raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s10bh))>.5,1,0)))
+Ss11code s11code s11h s11s 0 LATCH
+Cs11h s11h 0 1f IC=0
+Rs11h s11h 0 1e18
+Ss11bad s11bad s11bh s11s 0 LATCH
+Cs11bh s11bh 0 1f IC=0
+Rs11bh s11bh 0 1e18
+Cs11o0 s11o0 0 5e-14 IC=0.6
+Rs11o0 s11o0 cm 2e+16
+Ss11reset0 s11o0 cm s11r 0 WRITE
+Bs11reference0 s11reference0 0 V=if(V(s11w)>.1,if(abs(V(s11h)-(3))<.25,0.6375,if(abs(V(s11h)-(2))<.25,0.625,if(abs(V(s11h)-(1))<.25,0.6125,if(abs(V(s11h)-(0))<.25,0.6,if(abs(V(s11h)-(-1))<.25,0.5875,if(abs(V(s11h)-(-2))<.25,0.575,if(abs(V(s11h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs11valid0 s11valid0 0 V=if(V(s11bh)<.5,V(s11w),0)
+Ss11reference0 s11reference0 s11o0 s11valid0 0 WRITE
+Cs11o1 s11o1 0 5e-14 IC=0.6
+Rs11o1 s11o1 cm 2e+16
+Ss11reset1 s11o1 cm s11r 0 WRITE
+Bs11reference1 s11reference1 0 V=if(V(s11w)>.1,if(abs(V(s11h)-(3))<.25,0.5625,if(abs(V(s11h)-(2))<.25,0.575,if(abs(V(s11h)-(1))<.25,0.5875,if(abs(V(s11h)-(0))<.25,0.6,if(abs(V(s11h)-(-1))<.25,0.6125,if(abs(V(s11h)-(-2))<.25,0.625,if(abs(V(s11h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs11valid1 s11valid1 0 V=if(V(s11bh)<.5,V(s11w),0)
+Ss11reference1 s11reference1 s11o1 s11valid1 0 WRITE
+Bs11buffer s11out 0 V=V(s11o0,s11o1)
+Cs12raw s12raw 0 1e-13 IC=0
+Rs12raw s12raw 0 1e+16
+Vs12mac s12mac 0 PWL(0n 0 97n 0 97.01n 1 97.79n 1 97.8n 0)
+Bs12learned 0 s12raw I=4.2194092827004e-05*(2*V(s11out)+(-1)*V(input))*V(s12mac)
+Vs12s s12s 0 PWL(0n 0 98.3n 0 98.31n 1 98.49n 1 98.5n 0)
+Vs12r s12r 0 PWL(0n 0 98.8n 0 98.81n 1 99.29n 1 99.3n 0)
+Vs12w s12w 0 PWL(0n 0 99.5n 0 99.51n 1 101.49n 1 101.5n 0)
+Bs12code s12code 0 V=-3+if(((V(s12raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s12raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s12raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s12raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s12raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s12raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs12bad s12bad 0 V=if(((V(s12raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s12raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s11bh))>.5,1,0)))
+Ss12code s12code s12h s12s 0 LATCH
+Cs12h s12h 0 1f IC=0
+Rs12h s12h 0 1e18
+Ss12bad s12bad s12bh s12s 0 LATCH
+Cs12bh s12bh 0 1f IC=0
+Rs12bh s12bh 0 1e18
+Cs12o0 s12o0 0 5e-14 IC=0.6
+Rs12o0 s12o0 cm 2e+16
+Ss12reset0 s12o0 cm s12r 0 WRITE
+Bs12reference0 s12reference0 0 V=if(V(s12w)>.1,if(abs(V(s12h)-(3))<.25,0.6375,if(abs(V(s12h)-(2))<.25,0.625,if(abs(V(s12h)-(1))<.25,0.6125,if(abs(V(s12h)-(0))<.25,0.6,if(abs(V(s12h)-(-1))<.25,0.5875,if(abs(V(s12h)-(-2))<.25,0.575,if(abs(V(s12h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs12valid0 s12valid0 0 V=if(V(s12bh)<.5,V(s12w),0)
+Ss12reference0 s12reference0 s12o0 s12valid0 0 WRITE
+Cs12o1 s12o1 0 5e-14 IC=0.6
+Rs12o1 s12o1 cm 2e+16
+Ss12reset1 s12o1 cm s12r 0 WRITE
+Bs12reference1 s12reference1 0 V=if(V(s12w)>.1,if(abs(V(s12h)-(3))<.25,0.5625,if(abs(V(s12h)-(2))<.25,0.575,if(abs(V(s12h)-(1))<.25,0.5875,if(abs(V(s12h)-(0))<.25,0.6,if(abs(V(s12h)-(-1))<.25,0.6125,if(abs(V(s12h)-(-2))<.25,0.625,if(abs(V(s12h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs12valid1 s12valid1 0 V=if(V(s12bh)<.5,V(s12w),0)
+Ss12reference1 s12reference1 s12o1 s12valid1 0 WRITE
+Bs12buffer s12out 0 V=V(s12o0,s12o1)
+Cs13raw s13raw 0 1e-13 IC=0
+Rs13raw s13raw 0 1e+16
+Vs13mac s13mac 0 PWL(0n 0 105n 0 105.01n 1 105.79n 1 105.8n 0)
+Bs13learned 0 s13raw I=4.2194092827004e-05*(2*V(s12out)+(-1)*V(input))*V(s13mac)
+Vs13s s13s 0 PWL(0n 0 106.3n 0 106.31n 1 106.49n 1 106.5n 0)
+Vs13r s13r 0 PWL(0n 0 106.8n 0 106.81n 1 107.29n 1 107.3n 0)
+Vs13w s13w 0 PWL(0n 0 107.5n 0 107.51n 1 109.49n 1 109.5n 0)
+Bs13code s13code 0 V=-3+if(((V(s13raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s13raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s13raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s13raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s13raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s13raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs13bad s13bad 0 V=if(((V(s13raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s13raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s12bh))>.5,1,0)))
+Ss13code s13code s13h s13s 0 LATCH
+Cs13h s13h 0 1f IC=0
+Rs13h s13h 0 1e18
+Ss13bad s13bad s13bh s13s 0 LATCH
+Cs13bh s13bh 0 1f IC=0
+Rs13bh s13bh 0 1e18
+Cs13o0 s13o0 0 5e-14 IC=0.6
+Rs13o0 s13o0 cm 2e+16
+Ss13reset0 s13o0 cm s13r 0 WRITE
+Bs13reference0 s13reference0 0 V=if(V(s13w)>.1,if(abs(V(s13h)-(3))<.25,0.6375,if(abs(V(s13h)-(2))<.25,0.625,if(abs(V(s13h)-(1))<.25,0.6125,if(abs(V(s13h)-(0))<.25,0.6,if(abs(V(s13h)-(-1))<.25,0.5875,if(abs(V(s13h)-(-2))<.25,0.575,if(abs(V(s13h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs13valid0 s13valid0 0 V=if(V(s13bh)<.5,V(s13w),0)
+Ss13reference0 s13reference0 s13o0 s13valid0 0 WRITE
+Cs13o1 s13o1 0 5e-14 IC=0.6
+Rs13o1 s13o1 cm 2e+16
+Ss13reset1 s13o1 cm s13r 0 WRITE
+Bs13reference1 s13reference1 0 V=if(V(s13w)>.1,if(abs(V(s13h)-(3))<.25,0.5625,if(abs(V(s13h)-(2))<.25,0.575,if(abs(V(s13h)-(1))<.25,0.5875,if(abs(V(s13h)-(0))<.25,0.6,if(abs(V(s13h)-(-1))<.25,0.6125,if(abs(V(s13h)-(-2))<.25,0.625,if(abs(V(s13h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs13valid1 s13valid1 0 V=if(V(s13bh)<.5,V(s13w),0)
+Ss13reference1 s13reference1 s13o1 s13valid1 0 WRITE
+Bs13buffer s13out 0 V=V(s13o0,s13o1)
+Cs14raw s14raw 0 1e-13 IC=0
+Rs14raw s14raw 0 1e+16
+Vs14mac s14mac 0 PWL(0n 0 113n 0 113.01n 1 113.79n 1 113.8n 0)
+Bs14learned 0 s14raw I=4.2194092827004e-05*(2*V(s13out)+(-1)*V(input))*V(s14mac)
+Vs14s s14s 0 PWL(0n 0 114.3n 0 114.31n 1 114.49n 1 114.5n 0)
+Vs14r s14r 0 PWL(0n 0 114.8n 0 114.81n 1 115.29n 1 115.3n 0)
+Vs14w s14w 0 PWL(0n 0 115.5n 0 115.51n 1 117.49n 1 117.5n 0)
+Bs14code s14code 0 V=-3+if(((V(s14raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s14raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s14raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s14raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s14raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s14raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs14bad s14bad 0 V=if(((V(s14raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s14raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s13bh))>.5,1,0)))
+Ss14code s14code s14h s14s 0 LATCH
+Cs14h s14h 0 1f IC=0
+Rs14h s14h 0 1e18
+Ss14bad s14bad s14bh s14s 0 LATCH
+Cs14bh s14bh 0 1f IC=0
+Rs14bh s14bh 0 1e18
+Cs14o0 s14o0 0 5e-14 IC=0.6
+Rs14o0 s14o0 cm 2e+16
+Ss14reset0 s14o0 cm s14r 0 WRITE
+Bs14reference0 s14reference0 0 V=if(V(s14w)>.1,if(abs(V(s14h)-(3))<.25,0.6375,if(abs(V(s14h)-(2))<.25,0.625,if(abs(V(s14h)-(1))<.25,0.6125,if(abs(V(s14h)-(0))<.25,0.6,if(abs(V(s14h)-(-1))<.25,0.5875,if(abs(V(s14h)-(-2))<.25,0.575,if(abs(V(s14h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs14valid0 s14valid0 0 V=if(V(s14bh)<.5,V(s14w),0)
+Ss14reference0 s14reference0 s14o0 s14valid0 0 WRITE
+Cs14o1 s14o1 0 5e-14 IC=0.6
+Rs14o1 s14o1 cm 2e+16
+Ss14reset1 s14o1 cm s14r 0 WRITE
+Bs14reference1 s14reference1 0 V=if(V(s14w)>.1,if(abs(V(s14h)-(3))<.25,0.5625,if(abs(V(s14h)-(2))<.25,0.575,if(abs(V(s14h)-(1))<.25,0.5875,if(abs(V(s14h)-(0))<.25,0.6,if(abs(V(s14h)-(-1))<.25,0.6125,if(abs(V(s14h)-(-2))<.25,0.625,if(abs(V(s14h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs14valid1 s14valid1 0 V=if(V(s14bh)<.5,V(s14w),0)
+Ss14reference1 s14reference1 s14o1 s14valid1 0 WRITE
+Bs14buffer s14out 0 V=V(s14o0,s14o1)
+Cs15raw s15raw 0 1e-13 IC=0
+Rs15raw s15raw 0 1e+16
+Vs15mac s15mac 0 PWL(0n 0 121n 0 121.01n 1 121.79n 1 121.8n 0)
+Bs15learned 0 s15raw I=4.2194092827004e-05*(2*V(s14out)+(-1)*V(input))*V(s15mac)
+Vs15s s15s 0 PWL(0n 0 122.3n 0 122.31n 1 122.49n 1 122.5n 0)
+Vs15r s15r 0 PWL(0n 0 122.8n 0 122.81n 1 123.29n 1 123.3n 0)
+Vs15w s15w 0 PWL(0n 0 123.5n 0 123.51n 1 125.49n 1 125.5n 0)
+Bs15code s15code 0 V=-3+if(((V(s15raw))/0.0083333333333333+(0))>-2.5,1,0)+if(((V(s15raw))/0.0083333333333333+(0))>-1.5,1,0)+if(((V(s15raw))/0.0083333333333333+(0))>-0.5,1,0)+if(((V(s15raw))/0.0083333333333333+(0))>0.5,1,0)+if(((V(s15raw))/0.0083333333333333+(0))>1.5,1,0)+if(((V(s15raw))/0.0083333333333333+(0))>2.5,1,0)
+Bs15bad s15bad 0 V=if(((V(s15raw))/0.0083333333333333+(0))<-3.5+(0),1,if(((V(s15raw))/0.0083333333333333+(0))>=3.5+(0),1,if((V(s14bh))>.5,1,0)))
+Ss15code s15code s15h s15s 0 LATCH
+Cs15h s15h 0 1f IC=0
+Rs15h s15h 0 1e18
+Ss15bad s15bad s15bh s15s 0 LATCH
+Cs15bh s15bh 0 1f IC=0
+Rs15bh s15bh 0 1e18
+Cs15o0 s15o0 0 5e-14 IC=0.6
+Rs15o0 s15o0 cm 2e+16
+Ss15reset0 s15o0 cm s15r 0 WRITE
+Bs15reference0 s15reference0 0 V=if(V(s15w)>.1,if(abs(V(s15h)-(3))<.25,0.6375,if(abs(V(s15h)-(2))<.25,0.625,if(abs(V(s15h)-(1))<.25,0.6125,if(abs(V(s15h)-(0))<.25,0.6,if(abs(V(s15h)-(-1))<.25,0.5875,if(abs(V(s15h)-(-2))<.25,0.575,if(abs(V(s15h)-(-3))<.25,0.5625,.6))))))),.6)
+Bs15valid0 s15valid0 0 V=if(V(s15bh)<.5,V(s15w),0)
+Ss15reference0 s15reference0 s15o0 s15valid0 0 WRITE
+Cs15o1 s15o1 0 5e-14 IC=0.6
+Rs15o1 s15o1 cm 2e+16
+Ss15reset1 s15o1 cm s15r 0 WRITE
+Bs15reference1 s15reference1 0 V=if(V(s15w)>.1,if(abs(V(s15h)-(3))<.25,0.5625,if(abs(V(s15h)-(2))<.25,0.575,if(abs(V(s15h)-(1))<.25,0.5875,if(abs(V(s15h)-(0))<.25,0.6,if(abs(V(s15h)-(-1))<.25,0.6125,if(abs(V(s15h)-(-2))<.25,0.625,if(abs(V(s15h)-(-3))<.25,0.6375,.6))))))),.6)
+Bs15valid1 s15valid1 0 V=if(V(s15bh)<.5,V(s15w),0)
+Ss15reference1 s15reference1 s15o1 s15valid1 0 WRITE
+Bs15buffer s15out 0 V=V(s15o0,s15o1)
+.save i(bs0reference0) i(bs0reference1) i(bs10reference0) i(bs10reference1) i(bs11reference0) i(bs11reference1) i(bs12reference0) i(bs12reference1) i(bs13reference0) i(bs13reference1) i(bs14reference0) i(bs14reference1) i(bs15reference0) i(bs15reference1) i(bs1reference0) i(bs1reference1) i(bs2reference0) i(bs2reference1) i(bs3reference0) i(bs3reference1) i(bs4reference0) i(bs4reference1) i(bs5reference0) i(bs5reference1) i(bs6reference0) i(bs6reference1) i(bs7reference0) i(bs7reference1) i(bs8reference0) i(bs8reference1) i(bs9reference0) i(bs9reference1) i(vcm) v(cm) v(s0bh) v(s0h) v(s0o0) v(s0o1) v(s0out) v(s0raw) v(s0reference0) v(s0reference1) v(s10bh) v(s10h) v(s10o0) v(s10o1) v(s10out) v(s10raw) v(s10reference0) v(s10reference1) v(s11bh) v(s11h) v(s11o0) v(s11o1) v(s11out) v(s11raw) v(s11reference0) v(s11reference1) v(s12bh) v(s12h) v(s12o0) v(s12o1) v(s12out) v(s12raw) v(s12reference0) v(s12reference1) v(s13bh) v(s13h) v(s13o0) v(s13o1) v(s13out) v(s13raw) v(s13reference0) v(s13reference1) v(s14bh) v(s14h) v(s14o0) v(s14o1) v(s14out) v(s14raw) v(s14reference0) v(s14reference1) v(s15bh) v(s15h) v(s15o0) v(s15o1) v(s15out) v(s15raw) v(s15reference0) v(s15reference1) v(s1bh) v(s1h) v(s1o0) v(s1o1) v(s1out) v(s1raw) v(s1reference0) v(s1reference1) v(s2bh) v(s2h) v(s2o0) v(s2o1) v(s2out) v(s2raw) v(s2reference0) v(s2reference1) v(s3bh) v(s3h) v(s3o0) v(s3o1) v(s3out) v(s3raw) v(s3reference0) v(s3reference1) v(s4bh) v(s4h) v(s4o0) v(s4o1) v(s4out) v(s4raw) v(s4reference0) v(s4reference1) v(s5bh) v(s5h) v(s5o0) v(s5o1) v(s5out) v(s5raw) v(s5reference0) v(s5reference1) v(s6bh) v(s6h) v(s6o0) v(s6o1) v(s6out) v(s6raw) v(s6reference0) v(s6reference1) v(s7bh) v(s7h) v(s7o0) v(s7o1) v(s7out) v(s7raw) v(s7reference0) v(s7reference1) v(s8bh) v(s8h) v(s8o0) v(s8o1) v(s8out) v(s8raw) v(s8reference0) v(s8reference1) v(s9bh) v(s9h) v(s9o0) v(s9o1) v(s9out) v(s9raw) v(s9reference0) v(s9reference1)
+.tran 0 127.5n 0 0.04n UIC
+.end

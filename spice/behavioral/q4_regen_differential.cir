@@ -1,0 +1,36 @@
+q4 finite-region canonical regeneration
+* Behavioral references/buffers are ideal; port energy is not full supply energy.
+.model WRITE SW(Ron=1000 Roff=1e18 Vt=0.5 Vh=0.05)
+.model SAMPLE SW(Ron=1 Roff=1e18 Vt=0.5 Vh=0.05)
+.model LATCH SW(Ron=10000 Roff=1e18 Vt=0.5 Vh=0.05)
+.options plotwinsize=0 numdgt=15 reltol=1e-8 abstol=1e-18 vntol=1e-11
+Vcm cm 0 .6
+Vpacket packet 0 1.2
+Vin input 0 0.0325
+Vrs rs 0 PWL(0n 0 1n 0 1.01n 1 1.19n 1 1.2n 0)
+Vrr rr 0 PWL(0n 0 1.5n 0 1.51n 1 1.99n 1 2n 0)
+Vrw rw 0 PWL(0n 0 2.2n 0 2.21n 1 4.19n 1 4.2n 0)
+Brcode rcode 0 V=-3+if(((V(input))/0.025+(0))>-2.5,1,0)+if(((V(input))/0.025+(0))>-1.5,1,0)+if(((V(input))/0.025+(0))>-0.5,1,0)+if(((V(input))/0.025+(0))>0.5,1,0)+if(((V(input))/0.025+(0))>1.5,1,0)+if(((V(input))/0.025+(0))>2.5,1,0)
+Brbad rbad 0 V=if(((V(input))/0.025+(0))<-3.5+(0),1,if(((V(input))/0.025+(0))>=3.5+(0),1,if((0)>.5,1,0)))
+Srcode rcode rh rs 0 LATCH
+Crh rh 0 1f IC=0
+Rrh rh 0 1e18
+Srbad rbad rbh rs 0 LATCH
+Crbh rbh 0 1f IC=0
+Rrbh rbh 0 1e18
+Cro0 ro0 0 5e-14 IC=0.6
+Rro0 ro0 cm 2e+16
+Srreset0 ro0 cm rr 0 WRITE
+Brreference0 rreference0 0 V=if(V(rw)>.1,if(abs(V(rh)-(3))<.25,0.6375,if(abs(V(rh)-(2))<.25,0.625,if(abs(V(rh)-(1))<.25,0.6125,if(abs(V(rh)-(0))<.25,0.6,if(abs(V(rh)-(-1))<.25,0.5875,if(abs(V(rh)-(-2))<.25,0.575,if(abs(V(rh)-(-3))<.25,0.5625,.6))))))),.6)
+Brvalid0 rvalid0 0 V=if(V(rbh)<.5,V(rw),0)
+Srreference0 rreference0 ro0 rvalid0 0 WRITE
+Cro1 ro1 0 5e-14 IC=0.6
+Rro1 ro1 cm 2e+16
+Srreset1 ro1 cm rr 0 WRITE
+Brreference1 rreference1 0 V=if(V(rw)>.1,if(abs(V(rh)-(3))<.25,0.5625,if(abs(V(rh)-(2))<.25,0.575,if(abs(V(rh)-(1))<.25,0.5875,if(abs(V(rh)-(0))<.25,0.6,if(abs(V(rh)-(-1))<.25,0.6125,if(abs(V(rh)-(-2))<.25,0.625,if(abs(V(rh)-(-3))<.25,0.6375,.6))))))),.6)
+Brvalid1 rvalid1 0 V=if(V(rbh)<.5,V(rw),0)
+Srreference1 rreference1 ro1 rvalid1 0 WRITE
+Brbuffer rout 0 V=V(ro0,ro1)
+.save i(brreference0) i(brreference1) i(vcm) v(cm) v(rbh) v(rh) v(ro0) v(ro1) v(rout) v(rreference0) v(rreference1)
+.tran 0 6.2n 0 0.04n UIC
+.end

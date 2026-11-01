@@ -1,0 +1,16 @@
+* Behavioral unit-packet cell. No transistor/supply-energy claim.
+* Physical significance is the connection index, never local voltage magnitude.
+* Q removes Q charge packets at SELF and adds one at LEFT and RIGHT.
+.subckt GAMMA_UNIT SELF LEFT RIGHT SAMPLE TRANSFER params: Q=3 CSTATE=100f VUNIT=0.1 SCALE=4
+CSTATE SELF 0 {CSTATE} IC=0
+RLEAK SELF 0 1e18
+BCOMP CMP 0 V=if(V(SELF)>(Q-0.5)*VUNIT/SCALE,1,if(V(SELF)<-(Q-0.5)*VUNIT/SCALE,-1,0))
+SSAMPLE CMP HOLD SAMPLE 0 GSAMPLE
+.model GSAMPLE SW(Ron=1 Roff=1e18 Vt=0.5 Vh=0.05)
+CHOLD HOLD 0 1f IC=0
+RHOLD HOLD 0 1e18
+* TRANSFER has 10ps edge ramps and .98ns plateau: integral .99ns.
+BREMOVE SELF 0 I={Q*CSTATE*VUNIT/SCALE/990p}*V(HOLD)*V(TRANSFER)
+BLEFT 0 LEFT I={CSTATE*VUNIT/SCALE/990p}*V(HOLD)*V(TRANSFER)
+BRIGHT 0 RIGHT I={CSTATE*VUNIT/SCALE/990p}*V(HOLD)*V(TRANSFER)
+.ends GAMMA_UNIT
